@@ -1,0 +1,65 @@
+{
+  "sources": {
+    "epa_tad": "https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf",
+    "epa_2024_update": "https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf",
+    "airnow_aqi_basics": "https://www.airnow.gov/aqi/aqi-basics/",
+    "who_2021": "https://www.who.int/publications/i/item/9789240034228",
+    "who_2021_table": "https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"
+  },
+  "categories": [
+    {"id":"good","aqiLow":0,"aqiHigh":50,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
+    {"id":"moderate","aqiLow":51,"aqiHigh":100,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
+    {"id":"usg","aqiLow":101,"aqiHigh":150,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
+    {"id":"unhealthy","aqiLow":151,"aqiHigh":200,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
+    {"id":"very_unhealthy","aqiLow":201,"aqiHigh":300,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
+    {"id":"hazardous","aqiLow":301,"aqiHigh":500,"source":"https://www.airnow.gov/aqi/aqi-basics/"}
+  ],
+  "pollutants": {
+    "pm2_5": {
+      "unit": "µg/m³",
+      "truncateDecimals": 1,
+      "note": "EPA AQI breakpoints for PM2.5 (24-hour), as revised February 2024. Applied to hourly model values as an approximation.",
+      "breakpoints": [
+        {"category":"good","low":0.0,"high":9.0,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"},
+        {"category":"moderate","low":9.1,"high":35.4,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"},
+        {"category":"usg","low":35.5,"high":55.4,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"},
+        {"category":"unhealthy","low":55.5,"high":125.4,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"},
+        {"category":"very_unhealthy","low":125.5,"high":225.4,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"},
+        {"category":"hazardous","low":225.5,"high":325.4,"source":"https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf"}
+      ]
+    },
+    "pm10": {
+      "unit": "µg/m³",
+      "truncateDecimals": 0,
+      "note": "EPA AQI breakpoints for PM10 (24-hour). Applied to hourly model values as an approximation.",
+      "breakpoints": [
+        {"category":"good","low":0,"high":54,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"moderate","low":55,"high":154,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"usg","low":155,"high":254,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"unhealthy","low":255,"high":354,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"very_unhealthy","low":355,"high":424,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"hazardous","low":425,"high":604,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"}
+      ]
+    },
+    "ozone": {
+      "unit": "ppb",
+      "truncateDecimals": 0,
+      "note": "EPA AQI breakpoints for ozone, in ppb (EPA lists ppm: 8-hour 0.000-0.054 / 0.055-0.070 / 0.071-0.085 / 0.086-0.105 / 0.106-0.200; 1-hour 0.205-0.404 and 0.405-0.604 for the top two categories). Open-Meteo reports ug/m3; we convert with ugPerPpb. Hourly model values are compared against the 8-hour scale as an approximation.",
+      "ugPerPpb": 1.963,
+      "ugPerPpbNote": "Ozone molar mass 48.00 g/mol / molar volume 24.45 L/mol (25 C, 1 atm) = 1.963 ug/m3 per ppb.",
+      "breakpoints": [
+        {"category":"good","low":0,"high":54,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"moderate","low":55,"high":70,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"usg","low":71,"high":85,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"unhealthy","low":86,"high":105,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"very_unhealthy","low":106,"high":404,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
+        {"category":"hazardous","low":405,"high":604,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"}
+      ]
+    }
+  },
+  "who2021": {
+    "pm2_5": {"avg24h":15,"annual":5,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"},
+    "pm10": {"avg24h":45,"annual":15,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"},
+    "ozone": {"avg8h":100,"peakSeason":60,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"}
+  }
+}

@@ -6,15 +6,19 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "lint": "eslint . && tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint . && tsc --noEmit && vitest run",
     "build": "tsc --noEmit && vite build",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "playwright install chromium && node scripts/smoke.mjs",
+    "og": "node scripts/make-og.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.14.0",
+    "playwright": "^1.65.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.2",
-    "vite": "^8.3.7"
+    "vite": "^8.3.7",
+    "vitest": "^4.1.12"
   }
 }
