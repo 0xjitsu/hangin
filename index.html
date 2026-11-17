@@ -5,14 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hangin: PH air quality now</title>
     <meta name="description" content="Hourly PM2.5, PM10 and ozone for Philippine cities, with plain advice for kids, elders, pregnant women and people with asthma." />
+    <meta name="theme-color" content="#0b3d5c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href="https://hangin-ph.vercel.app/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hangin" />
+    <meta property="og:url" content="https://hangin-ph.vercel.app/" />
+    <meta property="og:title" content="Hangin: ang hangin na nilalanghap mo ngayon" />
+    <meta property="og:description" content="Hourly PM2.5, PM10 and ozone for any Philippine city, with plain advice for kids, elders, pregnant women and people with asthma." />
+    <meta property="og:image" content="https://hangin-ph.vercel.app/og/image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:video" content="https://hangin-ph.vercel.app/og/preview.mp4" />
+    <meta property="og:video:secure_url" content="https://hangin-ph.vercel.app/og/preview.mp4" />
+    <meta property="og:video:type" content="video/mp4" />
+    <meta property="og:video:width" content="1200" />
+    <meta property="og:video:height" content="630" />
+
+    <meta name="twitter:card" content="player" />
+    <meta name="twitter:title" content="Hangin: ang hangin na nilalanghap mo ngayon" />
+    <meta name="twitter:description" content="Hourly PM2.5, PM10 and ozone for any Philippine city, with plain advice." />
+    <meta name="twitter:image" content="https://hangin-ph.vercel.app/og/image.png" />
+    <meta name="twitter:player" content="https://hangin-ph.vercel.app/og/player.html" />
+    <meta name="twitter:player:width" content="1200" />
+    <meta name="twitter:player:height" content="630" />
   </head>
   <body>
+    <a class="skip" href="#result">Skip to result</a>
+    <header class="top">
+      <div>
+        <h1>Hangin</h1>
+        <p class="tagline" data-i18n="tagline">The air you’re breathing now.</p>
+      </div>
+      <button type="button" id="lang" class="btn" lang="tl" aria-label="Switch language to Tagalog">Tagalog</button>
+    </header>
     <main id="app">
-      <h1>Hangin</h1>
-      <p>The air you're breathing now. Being built: see the build brief in the repo issues.</p>
+      <p class="lead" data-i18n="lead">Hourly PM2.5, PM10 and ozone for Philippine cities, with plain advice for kids, elders, pregnant women and people with asthma.</p>
+
+      <section class="picker" aria-labelledby="search-label">
+        <label id="search-label" for="search" data-i18n="searchLabel">Search for a city</label>
+        <input id="search" type="search" autocomplete="off" spellcheck="false" placeholder="Type a city, e.g. Cebu" aria-controls="city-list" />
+        <ul id="city-list" aria-label="Cities"></ul>
+        <button type="button" id="locate" class="btn" data-i18n="useLocation">Use my location</button>
+        <p class="note" id="locate-note" data-i18n="locationNote"></p>
+        <p class="note" id="locate-msg" role="status"></p>
+      </section>
+
+      <section id="result" tabindex="-1" aria-live="polite" aria-busy="false"></section>
     </main>
     <footer>
-      <p>Air quality data: <a href="https://open-meteo.com/">Open-Meteo</a> Air Quality API (CC BY 4.0), based on Copernicus Atmosphere Monitoring Service (CAMS) data.</p>
+      <p id="disclaimer" class="disclaimer" data-i18n="disclaimer"></p>
+      <p id="thresholds-from"><span data-i18n="thresholdsFrom">Thresholds from</span>:
+        <a href="https://www.airnow.gov/aqi/aqi-basics/">US EPA AQI (AirNow)</a>,
+        <a href="https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf">EPA 2024 PM2.5 update</a>,
+        <a href="https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf">EPA AQI technical assistance document</a>,
+        <a href="https://www.who.int/publications/i/item/9789240034228">WHO Air Quality Guidelines 2021</a>.</p>
+      <p id="attribution" data-i18n-html="attribution">Air quality data: <a href="https://open-meteo.com/">Open-Meteo.com</a> (<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>), based on Copernicus Atmosphere Monitoring Service (CAMS) information.</p>
+      <p><span data-i18n="free">Free and open source (MIT).</span>
+        <a href="https://github.com/0xjitsu/hangin">Source</a>
+        <a id="donate" href="#" hidden data-i18n="donate">Support this project</a></p>
     </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
