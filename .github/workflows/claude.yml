@@ -34,4 +34,9 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Only our own builder/owner PRs may run checkout code (npm, node, etc.).
+          # Outsiders stay restricted. The action always treats *[bot] authors as
+          # untrusted (allowed_bots does not bypass this), so this expression is
+          # the narrow opt-out. Commenter write access is unchanged.
+          restrict_untrusted_prs: ${{ !(github.event.pull_request.user.login == 'claude[bot]' || github.event.pull_request.user.login == '0xjitsu' || github.event.issue.user.login == 'claude[bot]' || github.event.issue.user.login == '0xjitsu') }}
           claude_args: '--max-turns 120 --allowedTools "Bash(npm:*),Bash(npx:*),Bash(node:*),Bash(curl:*),Bash(python3:*),Bash(pip:*),Bash(ffmpeg:*),Bash(ffprobe:*),Bash(sudo apt-get:*),Bash(git:*),Bash(ls:*),Bash(mkdir:*),Bash(cp:*),Bash(mv:*),Bash(rm:*),Bash(cat:*),Bash(bash:*),Bash(chmod:*),Bash(du:*),Bash(stat:*),Bash(test:*),Bash(gh pr create:*),Edit,Write,Read,Glob,Grep"'
