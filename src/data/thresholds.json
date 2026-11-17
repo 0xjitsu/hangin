@@ -1,10 +1,10 @@
 {
   "sources": {
-    "epa_tad": "https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf",
+    "epa_tad": "https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf",
     "epa_2024_update": "https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf",
     "airnow_aqi_basics": "https://www.airnow.gov/aqi/aqi-basics/",
     "who_2021": "https://www.who.int/publications/i/item/9789240034228",
-    "who_2021_table": "https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"
+    "who_2021_table": "https://iris.who.int/server/api/core/bitstreams/551b515e-2a32-4e1a-a58c-cdaecd395b19/content"
   },
   "categories": [
     {"id":"good","aqiLow":0,"aqiHigh":50,"source":"https://www.airnow.gov/aqi/aqi-basics/"},
@@ -33,33 +33,38 @@
       "truncateDecimals": 0,
       "note": "EPA AQI breakpoints for PM10 (24-hour). Applied to hourly model values as an approximation.",
       "breakpoints": [
-        {"category":"good","low":0,"high":54,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"moderate","low":55,"high":154,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"usg","low":155,"high":254,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"unhealthy","low":255,"high":354,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"very_unhealthy","low":355,"high":424,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"hazardous","low":425,"high":604,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"}
+        {"category":"good","low":0,"high":54,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"moderate","low":55,"high":154,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"usg","low":155,"high":254,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"unhealthy","low":255,"high":354,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"very_unhealthy","low":355,"high":424,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"hazardous","low":425,"high":604,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"}
       ]
     },
     "ozone": {
       "unit": "ppb",
       "truncateDecimals": 0,
-      "note": "EPA AQI breakpoints for ozone, in ppb (EPA lists ppm: 8-hour 0.000-0.054 / 0.055-0.070 / 0.071-0.085 / 0.086-0.105 / 0.106-0.200; 1-hour 0.205-0.404 and 0.405-0.604 for the top two categories). Open-Meteo reports ug/m3; we convert with ugPerPpb. Hourly model values are compared against the 8-hour scale as an approximation.",
+      "note": "EPA AQI breakpoints for ozone, in ppb (EPA lists ppm). 8-hour table: 0.000-0.054 / 0.055-0.070 / 0.071-0.085 / 0.086-0.105 / 0.106-0.200 ppm. 1-hour table (used for 125 ppb and above): 0.125-0.164 / 0.165-0.204 / 0.205-0.404 / 0.405-0.604 ppm. The worse of the two categories is used. Open-Meteo reports ug/m3; we convert with ugPerPpb. Hourly model values are compared against these as an approximation.",
       "ugPerPpb": 1.963,
       "ugPerPpbNote": "Ozone molar mass 48.00 g/mol / molar volume 24.45 L/mol (25 C, 1 atm) = 1.963 ug/m3 per ppb.",
       "breakpoints": [
-        {"category":"good","low":0,"high":54,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"moderate","low":55,"high":70,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"usg","low":71,"high":85,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"unhealthy","low":86,"high":105,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"very_unhealthy","low":106,"high":404,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"},
-        {"category":"hazardous","low":405,"high":604,"source":"https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf"}
+        {"category":"good","low":0,"high":54,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"moderate","low":55,"high":70,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"usg","low":71,"high":85,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"unhealthy","low":86,"high":105,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"very_unhealthy","low":106,"high":200,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"}
+      ],
+      "breakpoints1h": [
+        {"category":"usg","low":125,"high":164,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"unhealthy","low":165,"high":204,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"very_unhealthy","low":205,"high":404,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"},
+        {"category":"hazardous","low":405,"high":604,"source":"https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf"}
       ]
     }
   },
   "who2021": {
-    "pm2_5": {"avg24h":15,"annual":5,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"},
-    "pm10": {"avg24h":45,"annual":15,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"},
-    "ozone": {"avg8h":100,"peakSeason":60,"unit":"µg/m³","source":"https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf"}
+    "pm2_5": {"avg24h":15,"annual":5,"unit":"µg/m³","source":"https://iris.who.int/server/api/core/bitstreams/551b515e-2a32-4e1a-a58c-cdaecd395b19/content"},
+    "pm10": {"avg24h":45,"annual":15,"unit":"µg/m³","source":"https://iris.who.int/server/api/core/bitstreams/551b515e-2a32-4e1a-a58c-cdaecd395b19/content"},
+    "ozone": {"avg8h":100,"peakSeason":60,"unit":"µg/m³","source":"https://iris.who.int/server/api/core/bitstreams/551b515e-2a32-4e1a-a58c-cdaecd395b19/content"}
   }
 }

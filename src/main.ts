@@ -1,7 +1,7 @@
 import './style.css';
 import cities from './data/cities.json';
 import { GROUPS, adviceFor, type Lang } from './advice';
-import { POLLUTANTS, bandForConcentration, categoryFromAqi, whoComparison, worstCategory, type CategoryId, type Pollutant } from './bands';
+import { POLLUTANTS, bandForConcentration, overallCategory, whoComparison, type CategoryId, type Pollutant } from './bands';
 import { fetchRaw, parseResponse, type Reading } from './api';
 import { dictionaries, type Dict } from './i18n';
 import { DONATE_URL } from './config';
@@ -63,8 +63,17 @@ function renderCityList() {
   const q = fold($<HTMLInputElement>('search').value.trim());
   const list = cities.filter((c) => !q || fold(c.name).includes(q) || fold(c.region).includes(q)).slice(0, 60);
   $('city-list').innerHTML = list.length
-    ? list.map((c) => `<li><button type="button" class="city" data-name="${esc(c.name)}"${place && !place.custom && place.name === c.name ? ' aria-current="true"' : ''}>${esc(c.name)} <span class="region">${esc(c.region)}</span></button></li>`).join('')
+    ? list.map((c) => `<li><button type="button" class="city" tabindex="-1" data-name="${esc(c.name)}"${place && !place.custom && place.name === c.name ? ' aria-current="true"' : ''}>${esc(c.name)} <span class="region">${esc(c.region)}</span></button></li>`).join('')
     : `<li class="empty">${esc(t().noCities)}</li>`;
+  const cur = document.querySelector<HTMLButtonElement>('#city-list button.city[aria-current]') ?? document.querySelector<HTMLButtonElement>('#city-list button.city');
+  if (cur) cur.tabIndex = 0;
+}
+
+/** Roving tabindex: the city list is a single tab stop; arrow keys move within it. */
+function focusCity(i: number) {
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('#city-list button.city')];
+  btns.forEach((b, j) => { b.tabIndex = j === i ? 0 : -1; });
+  btns[i]?.focus();
 }
 
 function categoryBadge(c: CategoryId | null): string {
@@ -82,11 +91,16 @@ function pollutantCard(p: Pollutant, v: number | null): string {
     whoText = `${d.who} (${basis} ${who.guideline} µg/m³): ${who.exceeds ? `<strong>${who.ratio.toFixed(1)}${d.whoTimes}, ${d.whoOver}</strong>` : d.whoWithin}`;
   }
   return `<article class="card ${band ?? 'none'}" data-pollutant="${p}">
-    <h3>${esc(d.pollutant[p])}</h3>
+    <h3>${esc(d.pollutant[p])} <span class="unit">(${esc(d.thisHour)})</span></h3>
     <p class="value"><span class="num" data-testid="value-${p}">${fmt(v)}</span> <span class="unit">µg/m³</span></p>
     <p>${categoryBadge(band)}</p>
     <p class="who">${whoText || esc(d.noData)}</p>
   </article>`;
+}
+
+function legend(): string {
+  const d = t();
+  return `<ul class="legend" aria-label="${esc(d.legend)}">${(Object.keys(ICONS) as CategoryId[]).map((c) => `<li><span class="sw ${c}" aria-hidden="true">${ICONS[c]}</span> ${esc(d.category[c])}</li>`).join('')}</ul>`;
 }
 
 function strip(p: Pollutant, r: Reading): string {
@@ -125,20 +139,21 @@ function hourTable(r: Reading): string {
 function renderData(r: Reading, fetchedAt: number, stale: boolean): string {
   const d = t();
   const bands = POLLUTANTS.map((p) => bandForConcentration(p, r.current[p]));
-  const overall = worstCategory(bands) ?? categoryFromAqi(r.current.us_aqi);
+  const overall = overallCategory(r.current);
   const missing = bands.some((b) => b === null);
   const when = r.currentTime ? formatPht(r.currentTime) : formatEpochPht(fetchedAt);
   const advice = overall
     ? `<section class="advice" aria-labelledby="adv-h"><h3 id="adv-h">${esc(d.adviceTitle)}</h3><p class="note">${esc(d.adviceFor)}: ${categoryBadge(overall)}</p>
       <dl>${GROUPS.map((g) => `<div class="g ${g}"><dt>${esc(d.group[g])}</dt><dd>${esc(adviceFor(lang, overall, g))}</dd></div>`).join('')}</dl></section>`
     : '';
-  const strips = r.hours.length ? `<section aria-labelledby="n24"><h3 id="n24">${esc(d.next24)}</h3>${POLLUTANTS.map((p) => strip(p, r)).join('')}${hourTable(r)}</section>` : '';
+  const strips = r.hours.length ? `<section aria-labelledby="n24"><h3 id="n24">${esc(d.next24)}</h3>${legend()}${POLLUTANTS.map((p) => strip(p, r)).join('')}${hourTable(r)}</section>` : '';
   return `${stale ? `<p class="banner warn" role="status">${esc(d.staleNotice)} ${esc(formatEpochPht(fetchedAt))}.</p><p><button type="button" class="btn" data-act="retry">${esc(d.retry)}</button></p>` : ''}
     <h2 id="place-h">${esc(d.showing)}: ${esc(place?.name ?? '')}${place && !place.custom ? ` <span class="region">${esc(place.region)}</span>` : ''}</h2>
     <p class="updated">${esc(d.updated)}: <time>${esc(when)}</time></p>
     <div class="overall ${overall ?? 'none'}"><span class="o-label">${esc(d.overall)}</span> ${categoryBadge(overall)}
       ${r.current.us_aqi !== null ? `<span class="aqi">${esc(d.aqi)} <strong data-testid="aqi">${Math.round(r.current.us_aqi)}</strong></span>` : ''}</div>
     ${missing ? `<p class="banner warn">${esc(d.missingNote)}</p>` : ''}
+    <p class="note">${esc(d.hourlyNote)}</p>
     <div class="cards">${POLLUTANTS.map((p) => pollutantCard(p, r.current[p])).join('')}</div>
     ${advice}${strips}`;
 }
@@ -224,6 +239,18 @@ function init() {
   renderCityList();
   $('lang').addEventListener('click', () => setLang(lang === 'en' ? 'tl' : 'en'));
   $('search').addEventListener('input', renderCityList);
+  $('search').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); focusCity(0); }
+  });
+  $('city-list').addEventListener('keydown', (e) => {
+    const btns = [...document.querySelectorAll<HTMLButtonElement>('#city-list button.city')];
+    const i = btns.indexOf(document.activeElement as HTMLButtonElement);
+    if (i < 0) return;
+    const to = e.key === 'ArrowDown' ? i + 1 : e.key === 'ArrowUp' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? btns.length - 1 : null;
+    if (to === null) return;
+    e.preventDefault();
+    if (to < 0) $('search').focus(); else focusCity(Math.min(to, btns.length - 1));
+  });
   $('city-list').addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest<HTMLElement>('button.city');
     if (b) pick(b.dataset.name as string);

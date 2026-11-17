@@ -51,7 +51,7 @@ h2 { font-size: 1.3rem; margin: 16px 0 4px; } h3 { margin: 0 0 6px; font-size: 1
 .bar { flex: 1 1 0; min-width: 0; height: var(--h); background: var(--none); border: 1px solid var(--ink); border-bottom: 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
 .bar.good { background: var(--good); } .bar.moderate { background: var(--moderate); } .bar.usg { background: var(--usg); }
 .bar.unhealthy { background: var(--unhealthy); } .bar.very_unhealthy { background: var(--very_unhealthy); } .bar.hazardous { background: var(--hazardous); color: #fff; }
-.mk { font-size: 8px; line-height: 1; }
+.mk { font-size: 10px; line-height: 1; }
 .axis { display: flex; justify-content: space-between; font-size: .75rem; color: var(--muted); margin: 2px 0 0; gap: 4px; }
 .tbl { margin-top: 12px; } .tbl summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
 .scroll { overflow-x: auto; max-width: 100%; }
@@ -60,5 +60,10 @@ th, td { border: 1px solid var(--line); padding: 4px 6px; text-align: left; } ca
 .cat-s { display: block; font-size: .75rem; color: var(--muted); }
 footer { margin-top: 24px; font-size: .85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
 footer .disclaimer { color: var(--ink); font-weight: 600; } footer a { margin-right: 8px; }
+.legend { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 6px 0; padding: 0; font-size: .8rem; }
+.legend .sw { display: inline-block; min-width: 1.4em; text-align: center; border: 1px solid var(--ink); border-radius: 4px; background: var(--none); }
+.legend .sw.good { background: var(--good); } .legend .sw.moderate { background: var(--moderate); } .legend .sw.usg { background: var(--usg); }
+.legend .sw.unhealthy { background: var(--unhealthy); } .legend .sw.very_unhealthy { background: var(--very_unhealthy); } .legend .sw.hazardous { background: var(--hazardous); color: #fff; }
+@media (max-width: 639px) { footer a:not([hidden]) { display: inline-block; min-height: 44px; line-height: 44px; } }
 @media (min-width: 640px) { .cards { grid-template-columns: repeat(3, 1fr); } .advice dl { grid-template-columns: 1fr 1fr; } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }

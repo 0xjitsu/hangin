@@ -21,13 +21,13 @@ Air quality data: [Open-Meteo.com](https://open-meteo.com/) Air Quality API ([do
 
 ## Where the thresholds come from
 All numbers live in [`src/data/thresholds.json`](src/data/thresholds.json), each with a source URL (smoke fails if one is missing):
-- **US EPA AQI categories and breakpoints:** [AirNow AQI basics](https://www.airnow.gov/aqi/aqi-basics/), the [EPA AQI Technical Assistance Document](https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf) (PM10, ozone), and the [February 2024 PM2.5 update](https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf) (Good now ends at 9.0 µg/m³).
+- **US EPA AQI categories and breakpoints:** [AirNow AQI basics](https://www.airnow.gov/aqi/aqi-basics/), the [EPA AQI Technical Assistance Document](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf) (PM10, ozone), and the [February 2024 PM2.5 update](https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf) (Good now ends at 9.0 µg/m³).
 - **WHO 2021 Air Quality Guidelines:** [publication](https://www.who.int/publications/i/item/9789240034228) (24-hour PM2.5 15, PM10 45 µg/m³; peak-season 8-hour O₃ 100 µg/m³).
 - The advice wording is a short paraphrase of the EPA/AirNow health message for each category.
 - Ozone: EPA breakpoints are in ppb/ppm; Open-Meteo reports µg/m³, so we convert at 1.963 µg/m³ per ppb (48.00 g/mol ÷ 24.45 L/mol at 25 °C, 1 atm). Hourly model values are compared against 24-hour (PM) and 8-hour (O₃) breakpoints as an approximation.
 
 ## Limits (please read)
-- This is a **model forecast** on a grid of several kilometres, **not** readings from an official monitoring station. Local conditions (traffic, burning, a nearby factory) can differ a lot.
+- This is a **model forecast** on a coarse grid (CAMS global, about 0.4° or ~45 km, roughly 3-hourly), so nearby cities can show identical values, **not** readings from an official monitoring station. Local conditions (traffic, burning, a nearby factory) can differ a lot.
 - It is **not medical advice**. Follow your doctor and official DENR-EMB advisories.
 
 ## Develop
@@ -53,7 +53,8 @@ Use 4-decimal coordinates inside the Philippines (lat 4.5–21.5, lon 116–127)
 `/og/preview.mp4` (H.264, 1200×630, under 5 MB), `/og/player.html` and `/og/image.png` are served from the site; head tags use absolute `https://hangin-ph.vercel.app` URLs.
 
 ## Support
-Donate: https://github.com/sponsors/0xjitsu <!-- TODO: placeholder until Berna picks an account; set DONATE_URL in src/config.ts to '' to hide it -->
+<!-- TODO: add a donation link here and set DONATE_URL in src/config.ts once a real Sponsors page exists. -->
+No donation page yet.
 
 ## License
 MIT

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { bandForConcentration, categoryFromAqi, worstCategory, whoComparison } from './bands';
+import { bandForConcentration, categoryFromAqi, overallCategory, worstCategory, whoComparison } from './bands';
 import thresholds from './data/thresholds.json';
 
 // Source: EPA PM NAAQS AQI fact sheet (Feb 2024 update)
@@ -21,7 +21,7 @@ describe('PM2.5 bands (EPA 2024)', () => {
 });
 
 // Source: EPA AQI Technical Assistance Document
-// https://www.airnow.gov/sites/default/files/2024-02/aqi-technical-assistance-document-sept2018.pdf
+// https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
 // PM10 µg/m³: 0-54 | 55-154 | 155-254 | 255-354 | 355-424 | 425+
 describe('PM10 bands (EPA TAD)', () => {
   const edges: [number, string][] = [
@@ -42,11 +42,17 @@ describe('Ozone bands (EPA TAD, ppb via 1.963 µg/m³ per ppb)', () => {
   const edges: [number, string][] = [
     [54, 'good'], [55, 'moderate'], [70, 'moderate'], [71, 'usg'],
     [85, 'usg'], [86, 'unhealthy'], [105, 'unhealthy'], [106, 'very_unhealthy'],
-    [404, 'very_unhealthy'], [405, 'hazardous'],
+    [200, 'very_unhealthy'], [404, 'very_unhealthy'], [405, 'hazardous'],
   ];
   it.each(edges)('%f ppb at the edge -> %s', (ppb, c) => expect(bandForConcentration('ozone', ug(ppb))).toBe(c));
   it.each([[55, 'good'], [71, 'moderate'], [86, 'usg'], [106, 'unhealthy']] as [number, string][])(
     'just below %f ppb stays in the lower band', (ppb, c) => expect(bandForConcentration('ozone', ug(ppb) - 0.05)).toBe(c));
+  it('takes the worse of the 8-hour and 1-hour tables', () => {
+    expect(bandForConcentration('ozone', ug(125))).toBe('very_unhealthy'); // 8 h says very unhealthy; 1 h says USG
+    expect(bandForConcentration('ozone', ug(250))).toBe('very_unhealthy');
+    expect(bandForConcentration('ozone', ug(404))).toBe('very_unhealthy');
+    expect(bandForConcentration('ozone', ug(405))).toBe('hazardous');
+  });
   it('conversion constant is 1.963', () => expect(k).toBe(1.963));
 });
 
@@ -76,6 +82,21 @@ describe('US AQI category mapping', () => {
   });
 });
 
+// The badge must agree with the printed US AQI, even when the single-hour bands disagree.
+describe('overallCategory follows the US AQI', () => {
+  it.each([[41, 'good'], [54, 'moderate'], [59, 'moderate'], [71, 'moderate'], [101, 'usg'], [null, null]] as [number | null, string | null][])(
+    'AQI %s -> %s', (a, c) => expect(overallCategory({ us_aqi: a })).toBe(c));
+  it('hourly Good beside AQI 55 (e.g. Angeles) reads Moderate', () => {
+    expect(bandForConcentration('pm2_5', 8)).toBe('good');
+    expect(overallCategory({ us_aqi: 55 })).toBe(categoryFromAqi(55));
+    expect(overallCategory({ us_aqi: 55 })).toBe('moderate');
+  });
+  it('hourly Moderate beside AQI 42 (e.g. Laoag) reads Good', () => {
+    expect(bandForConcentration('pm2_5', 12)).toBe('moderate');
+    expect(overallCategory({ us_aqi: 42 })).toBe('good');
+  });
+});
+
 describe('worstCategory', () => {
   it('picks the highest, ignoring nulls', () => {
     expect(worstCategory(['good', null, 'usg', 'moderate'])).toBe('usg');
@@ -83,7 +104,7 @@ describe('worstCategory', () => {
   });
 });
 
-// Source: WHO 2021 AQG https://iris.who.int/bitstream/handle/10665/345329/9789240034228-eng.pdf
+// Source: WHO 2021 AQG https://iris.who.int/server/api/core/bitstreams/551b515e-2a32-4e1a-a58c-cdaecd395b19/content
 // PM2.5 24-h 15, PM10 24-h 45, O3 peak-season 8-h 100 (µg/m³)
 describe('WHO 2021 comparison', () => {
   it('uses 15 / 45 / 100', () => {
@@ -99,7 +120,7 @@ describe('WHO 2021 comparison', () => {
 describe('thresholds.json integrity', () => {
   it('every breakpoint has an https source', () => {
     for (const p of Object.values(thresholds.pollutants)) {
-      expect(p.breakpoints).toHaveLength(6);
+      expect(p.breakpoints.length).toBeGreaterThanOrEqual(5);
       for (const b of p.breakpoints) expect(b.source).toMatch(/^https:\/\//);
     }
   });

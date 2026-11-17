@@ -16,16 +16,32 @@ await page.goto(url);
 await page.waitForSelector('[data-testid="value-pm2_5"]');
 rmSync('tmp-frames', { recursive: true, force: true });
 mkdirSync('tmp-frames');
+const stamp = () => page.evaluate(() => {
+  const t = document.querySelector('.updated time');
+  if (t) t.textContent = 'Sample data (not a live reading)';
+  if (document.getElementById('sample-stamp')) return;
+  const b = document.createElement('div');
+  b.id = 'sample-stamp';
+  b.textContent = 'SAMPLE DATA';
+  b.style.cssText = 'position:fixed;top:22px;right:150px;z-index:99;background:#a31d38;color:#fff;font-weight:800;padding:6px 12px;border-radius:6px;letter-spacing:.08em';
+  document.body.appendChild(b);
+});
 let n = 0;
 const shot = async (hold) => { for (let i = 0; i < hold; i++) await page.screenshot({ path: `tmp-frames/f${String(n++).padStart(4, '0')}.png` }); };
 // 10 fps. Scene 1: start page, scene 2: typing a city, scene 3: picked, cards + advice.
 await page.evaluate(() => { document.getElementById('result').innerHTML = ''; });
+await stamp();
 await shot(8);
 for (const s of ['C', 'Ce', 'Ceb', 'Cebu']) { await page.fill('#search', s); await shot(4); }
 await page.click('button.city[data-name="Cebu City"]');
 await page.waitForSelector('[data-testid="value-pm2_5"]');
+await stamp();
 await shot(20);
-await page.evaluate(() => window.scrollTo(0, 330));
+await page.evaluate(() => {
+  document.getElementById('city-list').style.maxHeight = '0';
+  document.getElementById('city-list').style.border = '0';
+  window.scrollTo(0, 0);
+});
 await shot(25);
 await page.screenshot({ path: 'public/og/image.png' });
 await browser.close();

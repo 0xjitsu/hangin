@@ -121,8 +121,8 @@ for (const n of ['Manila', 'Quezon City', 'Makati', 'Taguig', 'Pasig', 'Pasay', 
 const th = JSON.parse(readFileSync('src/data/thresholds.json', 'utf8'));
 const isUrl = (s) => typeof s === 'string' && /^https:\/\/\S+$/.test(s);
 for (const [p, def] of Object.entries(th.pollutants)) {
-  if (def.breakpoints.length !== 6) fail(`thresholds ${p}: need 6 breakpoints`);
-  for (const b of def.breakpoints) if (!isUrl(b.source)) fail(`thresholds ${p}/${b.category}: missing source URL`);
+  if (def.breakpoints.length !== (p === 'ozone' ? 5 : 6)) fail(`thresholds ${p}: unexpected breakpoint count ${def.breakpoints.length}`);
+  for (const b of [...def.breakpoints, ...(def.breakpoints1h ?? [])]) if (!isUrl(b.source)) fail(`thresholds ${p}/${b.category}: missing source URL`);
 }
 for (const [p, w] of Object.entries(th.who2021)) if (!isUrl(w.source)) fail(`thresholds who2021/${p}: missing source URL`);
 for (const c of th.categories) if (!isUrl(c.source)) fail(`thresholds category ${c.id}: missing source URL`);
@@ -174,7 +174,15 @@ try {
       await noOverflow('with results and table open');
       const footer = await page.locator('footer').innerText();
       if (!/Open-Meteo\.com \(CC BY 4\.0\)/.test(footer) || !/Thresholds from/.test(footer) || !/not medical advice/.test(footer)) fail(`${label}: footer attribution/thresholds/disclaimer missing`);
-      if ((await page.locator('footer a[href="https://github.com/sponsors/0xjitsu"]').count()) !== 1) fail(`${label}: donation link missing`);
+      if (!/24-hour/.test(body) || !/8-hour/.test(body)) fail(`${label}: hourly-vs-24h/8h note missing`);
+      if (!/this hour/i.test(body)) fail(`${label}: pollutant cards not labelled "this hour"`);
+      {
+        const badge = (await page.locator('.overall .badge').textContent()) ?? '';
+        const aqi = Number(await page.locator('[data-testid="aqi"]').textContent());
+        const want = aqi <= 50 ? 'Good' : aqi <= 100 ? 'Moderate' : aqi <= 150 ? 'Unhealthy for Sensitive' : 'Unhealthy';
+        if (!badge.includes(want)) fail(`${label}: badge "${badge.trim()}" disagrees with US AQI ${aqi}`);
+      }
+      if ((await page.locator('#donate:visible').count()) !== 0) fail(`${label}: donate link should be hidden until DONATE_URL is set`);
       // language toggle
       await page.click('#lang');
       if ((await page.getAttribute('html', 'lang')) !== 'fil') fail(`${label}: html lang should be fil after toggle`);
