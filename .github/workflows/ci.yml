@@ -12,6 +12,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install ffmpeg (ffprobe for the OG video smoke check)
+        run: sudo apt-get update -y && sudo apt-get install -y ffmpeg
       - run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
       - run: npm run lint
       - run: npm run build
